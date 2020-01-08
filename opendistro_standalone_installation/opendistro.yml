@@ -1,0 +1,8 @@
+---
+
+- name: Elasticsearch with opendistro configuration
+  become: true
+  hosts: es-cluster
+  gather_facts: false
+  roles:
+    - { role: centos7/elasticsearch_opendistro }

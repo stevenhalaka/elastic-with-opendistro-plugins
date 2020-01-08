@@ -14,6 +14,6 @@ Vagrant.configure("2") do |config|
   #config.vm.provision :docker_compose
   config.vm.provision "shell", inline: <<-SHELL
     sudo yum update
-    sudo yum install -y jq git htop
+    sudo yum install -y jq git htop java-11-openjdk
   SHELL
 end
