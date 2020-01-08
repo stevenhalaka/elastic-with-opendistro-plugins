@@ -1,14 +1,19 @@
 Vagrant.configure("2") do |config|
-  config.vm.box = "generic/ubuntu1904"
-  config.vm.synced_folder "./", "/vagrant"
-  config.vm.provider "virtualbox" do |vb|
-    vb.memory = "4096"
+  (1..3).each do |i|
+    config.vm.define "es#{i}" do |node|
+      node.vm.box = "centos/7"
+      node.vm.network :private_network, ip: "10.0.0.1#{i - 1}"
+      node.vm.hostname = "es#{i}"
+      node.vm.provider "virtualbox" do |vb|
+        vb.memory = "2048"
+      end
+    end
   end
 
-  config.vm.provision :docker
-  config.vm.provision :docker_compose
+  #config.vm.provision :docker
+  #config.vm.provision :docker_compose
   config.vm.provision "shell", inline: <<-SHELL
-    sudo apt-get update
-	sudo apt-get install -y jq git htop
+    sudo yum update
+    sudo yum install -y jq git htop
   SHELL
 end
