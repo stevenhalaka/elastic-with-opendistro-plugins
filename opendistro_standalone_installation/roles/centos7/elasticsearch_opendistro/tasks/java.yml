@@ -12,7 +12,7 @@
   yum: name={{ java }} state={{java_state}}
 
 - name: Get the installed java path
-  shell: "update-alternatives --display java | grep '^/' | awk '{print $1}' | grep java-11"
+  shell: "update-alternatives --display java | grep '^/' | awk '{print $1}' | grep java-1.8.0"
   become: yes
   register: java_full_path
   failed_when: False
