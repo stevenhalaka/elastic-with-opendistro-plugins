@@ -7,6 +7,7 @@
     dest: "{{ es_home }}/opendistro_security-{{ opendistro_security_version }}.zip"
   register: download
 
+# TODO: fix this register/when. It's not a good indication of whether the rest of the steps should be run
 - name: Security Plugin Install | Install the Opendistro security plugin
   become: true
   command: "{{ es_plugin_bin_path }} install -b file://{{ es_home }}/opendistro_security-{{ opendistro_security_version }}.zip"

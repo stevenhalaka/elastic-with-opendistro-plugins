@@ -7,6 +7,7 @@
   register: download
 
 - name: Security Plugin Install | Install the Opendistro security plugin in kibana
+  become_user: kibana
   command: "{{ kibana_plugin_bin_path }} install file:///usr/share/kibana/opendistro_security-{{ opendistro_security_version }}.zip"
   when: download.changed
   notify: restart kibana
