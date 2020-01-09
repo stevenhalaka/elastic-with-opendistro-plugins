@@ -1,12 +1,14 @@
-.Table Title
-|===
-|Name of Column 1 |Name of Column 2 |Name of Column 3 
+= Elasticsearch (non Open Distro) installation with Open Distro Security Plugin
 
-|Cell in column 1, row 1
-|Cell in column 2, row 1
-|Cell in column 3, row 1
+This project performs the https://opendistro.github.io/for-elasticsearch-docs/docs/install/plugins/[Standalone Elasticsearch plugin installation] which runs the Open Distro Security Plugin on top of the Open Source version of Elasticsearch. The installation is orchestrated via https://github.com/saravanan30erd/opendistro_standalone_installation[Ansible Play] and only requires Ansible and Java on the provisioner host.
 
-|Cell in column 1, row 2
-|Cell in column 2, row 2
-|Cell in column 3, row 2
-|===
+This stack yields full security in a free package.
+
+* https://opendistro.github.io/for-elasticsearch-docs/docs/security-configuration/[Security Plugin Configuration]
+* https://opendistro.github.io/for-elasticsearch-docs/docs/security-access-control/[Security Plugin Access Control]
+** Provides:
+*** Users/Roles with various identity provider/directory integration points
+*** Document level security
+*** Field level security
+*** Field level masking
+*** Cross cluster search
