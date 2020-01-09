@@ -1,5 +1,15 @@
 ---
 
+# TODO: remove this when lower todo is done
+- name: Purge Security Plugin
+  file:
+    state: absent
+    path: "{{ item }}"
+  with_items:
+    - /usr/share/elasticsearch/plugins/opendistro_security
+    - /tmp/opendistro-nodecerts
+    - /usr/share/elasticsearch/opendistro_security-{{ opendistro_security_version }}.zip
+
 - name: Security Plugin Install | Download Opendistro Elasticsearch security plugin {{ opendistro_security_version }}
   become: true
   get_url:
@@ -16,8 +26,17 @@
 
 ## Here we are going to use self-signed certificates for Transport (Node-Node communication) & REST API layer
 ## Using searchguard offline TLS tool to create node & root certificates
+- name: Security Plugin Install | Purge local temporary directory for certificate generation
+  become: false
+  local_action:
+    module: file
+    path: /tmp/opendistro-nodecerts
+    state: absent
+  run_once: true
+  when: install.changed
+
 - name: Security Plugin Install | Create local temporary directory for certificates generation
-  become: true
+  become: false
   local_action:
     module: file
     path: /tmp/opendistro-nodecerts
@@ -26,6 +45,7 @@
   when: install.changed
 
 - name: Security Plugin Install | Download certificates generation tool
+  become: false
   local_action:
     module: get_url
     url: https://search.maven.org/remotecontent?filepath=com/floragunn/search-guard-tlstool/1.5/search-guard-tlstool-1.5.zip
@@ -34,11 +54,17 @@
   when: install.changed
 
 - name: Security Plugin Install | Extract the certificates generation tool
-  local_action: command chdir=/tmp/opendistro-nodecerts tar -xvf search-guard-tlstool.zip
+  become: false
+  #local_action: command chdir=/tmp/opendistro-nodecerts tar -xvf search-guard-tlstool.zip
+  local_action:
+    module: unarchive
+    src: /tmp/opendistro-nodecerts/search-guard-tlstool.zip
+    dest: /tmp/opendistro-nodecerts
   run_once: true
   when: install.changed
 
 - name: Security Plugin Install | Make the executable file
+  become: false
   local_action:
     module: file
     dest: /tmp/opendistro-nodecerts/tools/sgtlstool.sh
@@ -47,6 +73,7 @@
   when: install.changed
 
 - name: Security Plugin Install | Prepare the certificates generation template file
+  become: false
   local_action:
     module: template
     src: tlsconfig.yml
@@ -55,8 +82,9 @@
   when: install.changed
 
 - name: Security Plugin Install | Generate the node & admin certificates in local
+  become: false
   local_action:
-    module: command /tmp/opendistro-nodecerts/tools/sgtlstool.sh -c /tmp/opendistro-nodecerts/config/tlsconfig.yml -ca -crt -t /tmp/opendistro-nodecerts/config/
+    module: command /tmp/opendistro-nodecerts/tools/sgtlstool.sh -f -o -c /tmp/opendistro-nodecerts/config/tlsconfig.yml -ca -crt -t /tmp/opendistro-nodecerts/config/
   run_once: true
   when: install.changed
 
@@ -99,6 +127,11 @@
     name: elasticsearch
     state: restarted
   when: install.changed
+
+- name: Ensure elasticsearch is up
+  wait_for:
+    host: "{{ ip }}"
+    port: 9300
 
 - name: Security Plugin Install | Copy the opendistro security internal users template
   become: true
