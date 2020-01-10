@@ -7,7 +7,7 @@ Auditing User Queries is not done by default. The best you can do out of the box
 
 For example, using opendistro_security, an audit record looks like:
 
-For the following REST query:
+For the following REST query (made through Kibana Dev Tools):
 
  GET kibana_sample_data_flights/_search?q=JetBeats
 
