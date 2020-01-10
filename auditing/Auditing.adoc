@@ -1,0 +1,47 @@
+= Auditing
+
+Auditing User Queries is not done by default. The best you can do out of the box is log the request body along with the other auditable events:
+
+* For Elastic/Apache 2.0 licensed stack: https://www.elastic.co/guide/en/elasticsearch/reference/7.x/auditing-search-queries.html
+* For Open Distro: https://opendistro.github.io/for-elasticsearch-docs/docs/security-audit-logs/#disable-request-body-logging
+
+For example, using opendistro_security, an audit record looks like:
+
+For the following REST query:
+
+ GET kibana_sample_data_flights/_search?q=JetBeats
+
+This is the audit record (note the request body):
+[source,json]
+--
+{
+"_index" : "security-auditlog-2020.01.10",
+"_type" : "_doc",
+"_id" : "AzzEkW8BxCl-W2nBE7I5",
+"_score" : 1.0,
+"_source" : {
+  "audit_cluster_name" : "elasticsearch",
+  "audit_node_name" : "YOGA910",
+  "audit_trace_task_id" : "I6uY5uoUQE20jyoyNKQgbA:785",
+  "audit_transport_request_type" : "SearchRequest",
+  "audit_category" : "GRANTED_PRIVILEGES",
+  "audit_request_origin" : "REST",
+  "audit_request_body" : """{"query":{"query_string":{"max_determinized_states":10000,"fuzziness":"AUTO","auto_generate_synonyms_phrase_query":true,"phrase_slop":0,"query":"JetBeats","analyze_wildcard":false,"fuzzy_transpositions":true,"type":"best_fields","fuzzy_prefix_length":0,"default_operator":"or","fuzzy_max_expansions":50,"boost":1.0,"enable_position_increments":true,"fields":[],"escape":false}}}""",
+  "audit_node_id" : "I6uY5uoUQE20jyoyNKQgbA",
+  "audit_request_layer" : "TRANSPORT",
+  "@timestamp" : "2020-01-10T23:22:23.920+00:00",
+  "audit_format_version" : 4,
+  "audit_request_remote_address" : "127.0.0.1",
+  "audit_request_privilege" : "indices:data/read/search",
+  "audit_node_host_address" : "127.0.0.1",
+  "audit_request_effective_user" : "admin",
+  "audit_trace_indices" : [
+    "kibana_sample_data_flights"
+  ],
+  "audit_trace_resolved_indices" : [
+    "kibana_sample_data_flights"
+  ],
+  "audit_node_host_name" : "127.0.0.1"
+}
+}
+--
