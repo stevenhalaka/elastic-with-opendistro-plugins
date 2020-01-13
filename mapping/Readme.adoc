@@ -1,0 +1,14 @@
+= Questions
+
+* Why don't Entities and KeyPhrases arrays output contain https://docs.aws.amazon.com/comprehend/latest/dg/API_KeyPhrase.html[score and offsets]?
+* Why doesn't the Entities array contain https://docs.aws.amazon.com/comprehend/latest/dg/API_Entity.html[objects] where type and text are separate?
+* The step function may way to *enrich* the final document with more metadata.
+** For example, there's almost nothing in this schema for tracking pedigree.
+** A simple integer field for stream# could at least help apply document level security.
+** Addiional fields:
+*** detected extension/mime type
+*** sha256sum of original doc (useful as elastic document id and detecting duplicates, e.g. "file.doc" and "file2.doc" that are identical)
+*** original file size, docx/xlsx/pdf/image(exif) metadata
+* Elastic mapping may want to leverage other language analyzers if we expect to see them
+* Elastic mapping may want to leverage ngram tokenizer/token filter if we want to provide suggestions/autocomplete
+

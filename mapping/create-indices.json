@@ -1,0 +1,104 @@
+PUT _template/test_index_template
+{
+  "index_patterns": [
+    "test_index"
+  ],
+  "settings": {
+    "number_of_shards": 1
+  },
+  "mappings": {
+    "properties": {
+      "s3link": {
+        "type": "keyword",
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          }
+        }
+      },
+      "Entities": {
+        "properties": {
+          "BeginOffset": {
+            "type": "integer"
+          },
+          "EndOffset": {
+            "type": "integer"
+          },
+          "Score": {
+            "type": "float"
+          },
+          "Type": {
+            "type": "keyword"
+          },
+          "Text": {
+            "type": "text",
+            "fields": {
+              "raw": {
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "KeyPhrases": {
+        "properties": {
+          "BeginOffset": {
+            "type": "integer"
+          },
+          "EndOffset": {
+            "type": "integer"
+          },
+          "Score": {
+            "type": "float"
+          },
+          "Text": {
+            "type": "text",
+            "fields": {
+              "raw": {
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "text": {
+        "type": "text",
+        "analyzer": "english"
+      }
+    }
+  }
+}
+
+DELETE test_index
+
+POST test_index/_doc/1
+{
+    "s3link": "https://s3.console.aws.amazon.com/s3/object/wc-ingest-bucket/Stream 19 - TFFC Incoming Liaison.pdf?region=us-east-1",
+    "KeyPhrases": [
+      {"BeginOffset":0,"EndOffset":14,"Score":5.2,"Text":"Dwayne Johnson"},
+      {"BeginOffset":56,"EndOffset":64,"Score":5.2,"Text":"Argentina"}
+    ],
+    "Entities": [
+      {"BeginOffset":0,"EndOffset":5,"Score":5.2,"Type":"LOCATION", "Text": "Argentina"},
+      {"BeginOffset":0,"EndOffset":5,"Score":5.2,"Type":"PERSON", "Text": "Johnson"}
+    ],
+    "text": "Yesterday, In Argentina, Dwayne Johnson hosted an event for his new movie.",
+    "table": [],
+    "forms": []
+  }
+
+GET test_index/_search?q=host
+
+GET test_index/_search?filter_path=hits.hits.highlight
+{
+  "query": {
+    "query_string": {
+      "query": "host"
+    }
+  },
+  "highlight": {
+    "fields": {
+      "text": {}
+    }
+  }
+}
