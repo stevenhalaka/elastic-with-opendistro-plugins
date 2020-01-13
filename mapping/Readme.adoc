@@ -1,7 +1,5 @@
-= Questions
+= Considerations
 
-* Why don't Entities and KeyPhrases arrays output contain https://docs.aws.amazon.com/comprehend/latest/dg/API_KeyPhrase.html[score and offsets]?
-* Why doesn't the Entities array contain https://docs.aws.amazon.com/comprehend/latest/dg/API_Entity.html[objects] where type and text are separate?
 * The step function may way to *enrich* the final document with more metadata.
 ** For example, there's almost nothing in this schema for tracking pedigree.
 ** A simple integer field for stream# could at least help apply document level security.
