@@ -87,13 +87,30 @@ POST test_index/_doc/1
     "forms": []
   }
 
+# Simple search, shows stemmer utility
 GET test_index/_search?q=host
 
+# Simple search with highlighting
 GET test_index/_search?filter_path=hits.hits.highlight
 {
   "query": {
     "query_string": {
       "query": "host"
+    }
+  },
+  "highlight": {
+    "fields": {
+      "text": {}
+    }
+  }
+}
+
+# Wildcard search
+GET test_index/_search?filter_path=hits.hits.highlight
+{
+  "query": {
+    "query_string": {
+      "query": "argen*"
     }
   },
   "highlight": {
