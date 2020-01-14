@@ -73,7 +73,7 @@ DELETE test_index
 
 POST test_index/_doc/1
 {
-    "s3link": "https://s3.console.aws.amazon.com/s3/object/wc-ingest-bucket/Stream 19 - TFFC Incoming Liaison.pdf?region=us-east-1",
+    "s3link": "https://s3.console.aws.amazon.com/s3/object/bucket-foo/filename.pdf?region=us-east-1",
     "KeyPhrases": [
       {"BeginOffset":0,"EndOffset":14,"Score":5.2,"Text":"Dwayne Johnson"},
       {"BeginOffset":56,"EndOffset":64,"Score":5.2,"Text":"Argentina"}
